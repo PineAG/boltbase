@@ -98,14 +98,12 @@ func onHttpRequest(w http.ResponseWriter, r *http.Request) {
 		fallthrough
 	case "PUT":
 		log.Println("SET", path)
-		notifyWebSockets(path, "SET")
 		log.Println("DEL", path)
 		data, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		notifyWebSockets(path, "DELETE")
 		err = db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte(boltBucketName))
 			b.Put([]byte(path), data)
@@ -114,6 +112,7 @@ func onHttpRequest(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
+		notifyWebSockets(path, "SET")
 
 	case "DELETE":
 		err = db.Update(func(tx *bolt.Tx) error {
@@ -124,6 +123,7 @@ func onHttpRequest(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
+		notifyWebSockets(path, "DELETE")
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
