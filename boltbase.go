@@ -98,7 +98,6 @@ func onHttpRequest(w http.ResponseWriter, r *http.Request) {
 		fallthrough
 	case "PUT":
 		log.Println("SET", path)
-		log.Println("DEL", path)
 		data, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
@@ -115,6 +114,7 @@ func onHttpRequest(w http.ResponseWriter, r *http.Request) {
 		notifyWebSockets(path, "SET")
 
 	case "DELETE":
+		log.Println("DEL", path)
 		err = db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte(boltBucketName))
 			b.Delete([]byte(path))
