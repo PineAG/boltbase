@@ -48,7 +48,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: latest
-          labels: latest
-#           tags: ${{ steps.meta.outputs.tags }}
-#           labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
